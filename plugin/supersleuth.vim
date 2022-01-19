@@ -33,8 +33,7 @@ function! s:SuperSleuth(verbose, args) abort
 
 		if l =~# "^\t\\+\\S"
 			if !dry
-				setlocal noexpandtab
-				setlocal tabstop=4 shiftwidth=4
+				setlocal noexpandtab tabstop=2 shiftwidth=0
 			endif
 
 			if a:verbose
@@ -46,9 +45,8 @@ function! s:SuperSleuth(verbose, args) abort
 			let spaces = len(substitute(l, '\S.*', '', ''))
 
 			if !dry
-				setlocal expandtab
+				setlocal expandtab shiftwidth=0
 				let &tabstop = spaces
-				let &shiftwidth = spaces
 			endif
 
 			if a:verbose
