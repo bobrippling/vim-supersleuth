@@ -42,7 +42,7 @@ function! s:SuperSleuth(verbose, args) abort
 				echo 'supersleuth: using tabs, found on line ' .. i
 			endif
 
-			break
+			return
 		elseif l =~# "^ \\+\\S"
 			let spaces = len(substitute(l, '\S.*', '', ''))
 
@@ -74,9 +74,14 @@ function! s:SuperSleuth(verbose, args) abort
 				endif
 			endif
 
-			break
+			return
 		endif
 	endfor
+
+	setlocal noexpandtab tabstop=2 shiftwidth=0
+	if a:verbose
+		echo 'supersleuth: no indent found, defaulting to ts=' .. &tabstop
+	endif
 endfunction
 
 augroup supersleuth
