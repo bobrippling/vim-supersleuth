@@ -24,6 +24,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 	endif
 
 	let regex_tab = "^\t\\+\\S"
+	let space_indents = {} " Map<indent-level, count>
 
 	for i in range(1, line('$'))
 		let l = getline(i)
@@ -55,6 +56,26 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 				endif
 			endfor
 
+			" if no tabs, we might just have an awkwardly spaced file
+			if !have_tab
+				if !has_key(space_indents, spaces)
+					let space_indents[spaces] = 0
+				endif
+				let space_indents[spaces] += 1
+
+				let consistent = 0
+				for count in values(space_indents)
+					if count > 1
+						let consistent = 1
+						break
+					endif
+				endfor
+
+				if !consistent
+					continue
+				endif
+			endif
+
 			if !dry
 				if have_tab
 					" something like vim's source code
@@ -80,6 +101,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 
 	setlocal noexpandtab tabstop=2 shiftwidth=0
 	if a:verbose
-		echo 'supersleuth: no indent found, defaulting to ts=' .. &tabstop
+		let extra = empty(space_indents) ? '' : ' (found inconsistent spacing)'
+		echo 'supersleuth: no indent found, defaulting to ts=' .. &tabstop .. extra
 	endif
 endfunction
