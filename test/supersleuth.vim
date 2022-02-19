@@ -46,6 +46,32 @@ Then:
   Assert &expandtab == 0
   Assert &shiftwidth == 2
 
+Given (tabs then consistent spaces):
+  void f() {
+  	hi
+    yo
+    yo
+  }
+Execute:
+  SuperSleuth
+Then:
+  Assert &tabstop == 8
+  Assert &expandtab == 0
+  Assert &shiftwidth == 2
+
+Given (consistent spaces mixed with tabs):
+  void f() {
+    yo
+  	hi
+    yo
+  }
+Execute:
+  SuperSleuth
+Then:
+  Assert &tabstop == 8
+  Assert &expandtab == 0
+  Assert &shiftwidth == 2
+
 Given (inconsistent spaces only):
   void f() {
     yo
