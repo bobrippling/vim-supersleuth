@@ -50,8 +50,8 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			endif
 			let space_indents[indent] += 1
 
-			for [indent, count] in items(space_indents)
-				if count > 1
+			for [indent, nlines] in items(space_indents)
+				if nlines > 1
 					let space_consistent = indent
 					break
 				endif
