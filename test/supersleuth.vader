@@ -79,9 +79,38 @@ Given (inconsistent spaces only):
   }
 Execute:
   " random values to see if they change
-  set tabstop=3 noexpandtab shiftwidth=7
+  setlocal tabstop=3 noexpandtab shiftwidth=7
   SuperSleuth
 Then:
   Assert &tabstop == 3
   Assert &expandtab == 0
   Assert &shiftwidth == 7
+
+Given (small indent then consistent large indents, no consistent small indent):
+  void f() {
+    2 space indent
+      4 space indent
+      4 space indent 2
+  }
+Execute:
+  SuperSleuth
+Then:
+  " smallest indent is picked
+  Assert &tabstop == 2
+  Assert &expandtab == 1
+  Assert &shiftwidth == 0
+
+Given (small indent then consistent large indents, then consistent small indent):
+  void f() {
+    2 space indent
+      4 space indent
+      4 space indent 2
+    2 space indent 2
+  }
+Execute:
+  SuperSleuth
+Then:
+  " smallest indent is picked
+  Assert &tabstop == 2
+  Assert &expandtab == 1
+  Assert &shiftwidth == 0

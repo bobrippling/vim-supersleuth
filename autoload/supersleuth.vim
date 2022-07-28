@@ -28,6 +28,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 	let space_indents = {} " Map<indent-level, count>
 	let space_line = 0
 	let space_consistent = 0
+	let smallest_indent = 999
 	let tab_line = 0
 
 	for i in range(1, line('$'))
@@ -50,10 +51,24 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			endif
 			let space_indents[indent] += 1
 
+			if smallest_indent > indent
+				let smallest_indent = indent
+			endif
+
 			for [indent, nlines] in items(space_indents)
 				if nlines > 1
-					let space_consistent = indent
-					break
+					" we've found multiple, but may be that an earlier indent
+					" needs accounting for - see if this is the smallest entry
+
+					if indent == smallest_indent
+						let space_consistent = indent
+						break
+					endif
+					let remainder = (indent + 0.0) / smallest_indent
+					if remainder == float2nr(remainder)
+						" indent is a multiple of smallest_indent, use smallest_indent
+						let space_consistent = smallest_indent
+					endif
 				endif
 			endfor
 		endif
