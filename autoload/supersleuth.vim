@@ -89,7 +89,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 	elseif space_consistent && !tab_line
 		if !dry
 			setlocal expandtab shiftwidth=0
-			let &tabstop = space_consistent
+			let &l:tabstop = space_consistent
 		endif
 
 		if a:verbose
@@ -99,7 +99,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 		if !dry
 			" something like vim's source code
 			setlocal noexpandtab tabstop=8
-			let &shiftwidth = space_consistent
+			let &l:shiftwidth = space_consistent
 		endif
 
 		if a:verbose
