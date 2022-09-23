@@ -1,4 +1,4 @@
 SuperSleuth.vim
 ---------------
 
-Very simple tab/space detection on `FileType` change.
+Very simple tab/space detection
