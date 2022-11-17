@@ -31,7 +31,8 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 	let smallest_indent = 999
 	let tab_line = 0
 
-	for i in range(1, line('$'))
+	" 100 lines, for time
+	for i in range(1, min([100, line('$')]))
 		let l = getline(i)
 
 		if l =~# '^\s*\*'
