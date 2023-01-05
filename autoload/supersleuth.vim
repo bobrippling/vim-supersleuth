@@ -111,9 +111,63 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			echo 'supersleuth: using a mix, found tabs (line ' .. tab_line .. ') and consistent indent of ' .. space_consistent .. ' spaces (line ' .. space_line .. ')'
 		endif
 	else
-		if a:verbose
-			let extra = empty(space_indents) ? '' : ' (found inconsistent spacing)'
-			echo 'supersleuth: no indent found, defaulting to ts=' .. &tabstop .. extra
+		" no tabs, no consistent spaces
+
+		" any spaces at all?
+		if empty(space_indents)
+			if !dry
+				setlocal noexpandtab tabstop=2 shiftwidth=0
+			endif
+
+			if a:verbose
+				echo 'supersleuth: no indent, defaulting to ts=' .. &ts
+			endif
+		else
+			" what's the difference between indents? consistent?
+			let indents = sort(map(keys(space_indents), 'str2nr(v:val)'))
+			let indent = -1
+
+			if len(indents) == 1
+				let indent = indents[0]
+			elseif len(indents) > 2
+				call assert_true(len(indents) > 1)
+				let first_diff = indents[1] - indents[0]
+
+				let same_step = 1
+				for i in range(2, len(indents) - 1)
+					if indents[i] - indents[i-1] != first_diff
+						let same_step = 0
+						break
+					endif
+				endfor
+
+				if same_step
+					let indent = first_diff
+				endif
+			else
+				" two indents, take their difference if they're divisible by two
+				" (like above, but a little more restricted)
+				let div0 = indents[0] / 2.0
+				let div1 = indents[1] / 2.0
+
+				if s:is_integral(div0) && s:is_integral(div1)
+					let indent = indents[1] - indents[0]
+				endif
+			endif
+
+			if indent > 0
+				setlocal expandtab shiftwidth=0
+				let &l:tabstop = indent
+
+				if a:verbose
+					echo 'supersleuth: using consistent step between indents (' .. &ts .. ')'
+				endif
+			else
+				" no indent - always echo, regardless of a:verbose
+				echohl ErrorMsg
+				echo 'supersleuth: warning: no indent found - no tabs & inconsistent spaces'
+				echohl none
+			endif
 		endif
 	endif
 endfunction

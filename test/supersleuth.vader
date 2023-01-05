@@ -79,7 +79,7 @@ Then:
 Given (inconsistent spaces only):
   void f() {
     yo
-     hi
+       hi
   }
 Execute:
   SuperSleuth
@@ -115,4 +115,51 @@ Then:
   " smallest indent is picked
   Assert &tabstop == 2
   Assert &expandtab == 1
+  Assert &shiftwidth == 0
+
+Given (indented text, but with consistent steps between indent levels, two spaces):
+    hi
+      there
+      there2
+Execute:
+  SuperSleuth
+Then:
+  " inconsistent spacing, but we guess at the gap between the first and second depths
+  Assert &expandtab == 1
+  Assert &tabstop == 2
+  Assert &shiftwidth == 0
+
+Given (indented text, but with consistent steps between indent levels, two spaces, four space initial):
+      hi
+        there
+        there2
+Execute:
+  SuperSleuth
+Then:
+  Assert &expandtab == 1
+  Assert &tabstop == 2
+  Assert &shiftwidth == 0
+
+Given (indented text, but with consistent steps between indent levels, four spaces, multiple levels):
+    hi
+        there
+        there2
+            there3
+Execute:
+  SuperSleuth
+Then:
+  Assert &expandtab == 1
+  Assert &tabstop == 2
+  Assert &shiftwidth == 0
+
+Given (indented text, but with inconsistent steps between indent levels):
+    hi
+        there
+        there2
+           there3
+Execute:
+  SuperSleuth
+Then:
+  Assert &expandtab == 1
+  Assert &tabstop == 2
   Assert &shiftwidth == 0
