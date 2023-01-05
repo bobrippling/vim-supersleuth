@@ -52,7 +52,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			endif
 			let space_indents[indent] += 1
 
-			if smallest_indent > indent
+			if indent < smallest_indent
 				let smallest_indent = indent
 			endif
 
