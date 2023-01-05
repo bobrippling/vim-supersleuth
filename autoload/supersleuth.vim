@@ -81,6 +81,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 	endfor
 
 	if tab_line && !space_consistent
+		" just tabs, no (consistent) spaces
 		if !dry
 			setlocal noexpandtab tabstop=2 shiftwidth=0
 		endif
@@ -89,15 +90,17 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			echo 'supersleuth: using tabs (line ' .. tab_line .. ')'
 		endif
 	elseif space_consistent && !tab_line
+		" just spaces (consistent), no tabs
 		if !dry
 			setlocal expandtab shiftwidth=0
 			let &l:tabstop = space_consistent
 		endif
 
 		if a:verbose
-			echo 'supersleuth: using spaces, found initial indent of ' .. space_consistent .. ' (line ' .. space_line .. ')'
+			echo 'supersleuth: using spaces, found consistent indent of ' .. space_consistent .. ' (line ' .. space_line .. ')'
 		endif
 	elseif space_consistent
+		" tabs and (consistent) spaces
 		if !dry
 			" something like vim's source code
 			setlocal noexpandtab tabstop=8
@@ -105,7 +108,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 		endif
 
 		if a:verbose
-			echo 'supersleuth: using a mix, found tabs (line ' .. tab_line .. ') and initial indent of ' .. space_consistent .. ' spaces (line ' .. space_line .. ')'
+			echo 'supersleuth: using a mix, found tabs (line ' .. tab_line .. ') and consistent indent of ' .. space_consistent .. ' spaces (line ' .. space_line .. ')'
 		endif
 	else
 		if a:verbose
