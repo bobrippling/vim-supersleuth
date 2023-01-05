@@ -68,7 +68,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 				endif
 
 				let remainder = (indent + 0.0) / smallest_indent
-				if remainder == float2nr(remainder)
+				if s:is_integral(remainder)
 					" indent is a multiple of smallest_indent, use smallest_indent
 					let space_consistent = smallest_indent
 				endif
@@ -113,4 +113,8 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			echo 'supersleuth: no indent found, defaulting to ts=' .. &tabstop .. extra
 		endif
 	endif
+endfunction
+
+function! s:is_integral(n)
+	return a:n == float2nr(a:n)
 endfunction
