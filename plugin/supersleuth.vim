@@ -25,7 +25,8 @@ augroup supersleuth
 	autocmd!
 
 	autocmd BufNewFile,BufReadPost,BufFilePost * nested call s:Init(1)
+
 	autocmd FileType * nested call s:Init(0)
 augroup END
 
-command! -bar -nargs=? SuperSleuth call supersleuth#SuperSleuth(0, <q-args>)
+command! -bar -nargs=? SuperSleuth call supersleuth#SuperSleuth(1, <q-args>)
