@@ -1,3 +1,7 @@
+Before:
+  " random values to see if they change
+  setlocal tabstop=3 noexpandtab shiftwidth=7
+
 Given (tabs only):
   void f() {
   	hi
@@ -78,8 +82,6 @@ Given (inconsistent spaces only):
      hi
   }
 Execute:
-  " random values to see if they change
-  setlocal tabstop=3 noexpandtab shiftwidth=7
   SuperSleuth
 Then:
   Assert &tabstop == 3
