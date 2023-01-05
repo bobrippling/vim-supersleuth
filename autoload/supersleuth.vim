@@ -9,7 +9,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 		endif
 	endif
 
-	if &l:buftype =~# '^\v%(quickfix|help|terminal|prompt|popup)$'
+	if &l:buftype =~# '^\v%(quickfix|help|terminal|prompt|popup)$' || @% =~ '^term://'
 		if a:verbose
 			echo 'not supersleuthing bt=' .. &l:buftype
 		endif
