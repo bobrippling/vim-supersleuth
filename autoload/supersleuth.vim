@@ -57,19 +57,20 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			endif
 
 			for [indent, nlines] in items(space_indents)
-				if nlines > 1
-					" we've found multiple, but may be that an earlier indent
-					" needs accounting for - see if this is the smallest entry
+				if nlines <= 1
+					continue
+				endif
 
-					if indent == smallest_indent
-						let space_consistent = indent
-						break
-					endif
-					let remainder = (indent + 0.0) / smallest_indent
-					if remainder == float2nr(remainder)
-						" indent is a multiple of smallest_indent, use smallest_indent
-						let space_consistent = smallest_indent
-					endif
+				" we've found multiple - accept if this is the smallest entry
+				if indent == smallest_indent
+					let space_consistent = indent
+					break
+				endif
+
+				let remainder = (indent + 0.0) / smallest_indent
+				if remainder == float2nr(remainder)
+					" indent is a multiple of smallest_indent, use smallest_indent
+					let space_consistent = smallest_indent
 				endif
 			endfor
 		endif
