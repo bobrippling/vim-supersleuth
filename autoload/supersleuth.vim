@@ -103,7 +103,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 		" tabs and (consistent) spaces
 		if !dry
 			" something like vim's source code
-			setlocal noexpandtab tabstop=8
+			setlocal noexpandtab tabstop=8 shiftwidth=0
 			let &l:shiftwidth = space_consistent
 		endif
 
