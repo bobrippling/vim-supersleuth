@@ -1,10 +1,19 @@
+if !exists('g:supersleuth_log')
+	let g:supersleuth_log = []
+endif
+
 function! supersleuth#SuperSleuth(verbose, args) abort
 	let dry = 0
 	if !empty(a:args)
 		if a:args ==# '-n'
 			let dry = 1
+		elseif a:args ==# '-s'
+			for msg in g:supersleuth_log
+				echo msg
+			endfor
+			return
 		else
-			echoerr 'Usage: SuperSleuth [-n]  # -n: dry run'
+			echoerr 'Usage: SuperSleuth [-n] [-s] # -n: dry run, -s: show'
 			return
 		endif
 	endif
@@ -153,8 +162,10 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 				call s:verbose(a:verbose, 'using consistent step between indents (' .. &ts .. ')')
 			else
 				" no indent - always echo, regardless of a:verbose
+				let msg = 'warning: no indent found - no tabs & inconsistent spaces'
+				call s:verbose(a:verbose, msg, 1)
 				echohl ErrorMsg
-				echo "supersleuth: warning: no indent found - no tabs & inconsistent spaces"
+				echo "supersleuth:" msg
 				echohl none
 			endif
 		endif
@@ -165,8 +176,15 @@ function! s:is_integral(n)
 	return a:n == float2nr(a:n)
 endfunction
 
-function! s:verbose(v, msg)
-	if a:v
+function! s:verbose(v, msg, skipecho = 0)
+	let log = strftime("%Y-%m-%d %H:%M:%S") . ": " . @% . ": " . a:msg
+	call add(g:supersleuth_log, log)
+
+	if len(g:supersleuth_log) > 256
+		call remove(g:supersleuth_log, 256, len(g:supersleuth_log) - 1)
+	endif
+
+	if a:v && !a:skipecho
 		echo "supersleuth:" a:msg
 	endif
 endfunction
