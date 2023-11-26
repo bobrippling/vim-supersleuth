@@ -10,17 +10,15 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 	endif
 
 	if &l:buftype =~# '^\v%(quickfix|help|terminal|prompt|popup)$'
-		echo 'supersleuth: not supersleuthing bt=' .. &l:buftype
+		call s:verbose(a:verbose, 'not supersleuthing bt=' .. &l:buftype)
 		return
 	elseif @% =~ '^term://'
-		echo 'supersleuth: not supersleuthing term://'
+		call s:verbose(a:verbose, 'not supersleuthing term://')
 		return
 	endif
 
 	if &l:filetype ==# 'netrw'
-		if a:verbose
-			echo 'not supersleuthing ft=' .. &l:filetype
-		endif
+		call s:verbose(a:verbose, 'not supersleuthing ft=' .. &l:filetype)
 		return
 	endif
 
@@ -87,9 +85,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			setlocal noexpandtab tabstop=2 shiftwidth=0
 		endif
 
-		if a:verbose
-			echo 'supersleuth: using tabs (line ' .. tab_line .. ')'
-		endif
+		call s:verbose(a:verbose, 'using tabs (line ' .. tab_line .. ')')
 	elseif space_consistent && !tab_line
 		" just spaces (consistent), no tabs
 		if !dry
@@ -97,9 +93,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			let &l:tabstop = space_consistent
 		endif
 
-		if a:verbose
-			echo 'supersleuth: using spaces, found consistent indent of ' .. space_consistent .. ' (line ' .. space_line .. ')'
-		endif
+		call s:verbose(a:verbose, 'using spaces, found consistent indent of ' .. space_consistent .. ' (line ' .. space_line .. ')')
 	elseif space_consistent
 		" tabs and (consistent) spaces
 		if !dry
@@ -108,9 +102,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			let &l:shiftwidth = space_consistent
 		endif
 
-		if a:verbose
-			echo 'supersleuth: using a mix, found tabs (line ' .. tab_line .. ') and consistent indent of ' .. space_consistent .. ' spaces (line ' .. space_line .. ')'
-		endif
+		call s:verbose(a:verbose, 'using a mix, found tabs (line ' .. tab_line .. ') and consistent indent of ' .. space_consistent .. ' spaces (line ' .. space_line .. ')')
 	else
 		" no tabs, no consistent spaces
 
@@ -120,9 +112,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 				setlocal noexpandtab tabstop=2 shiftwidth=0
 			endif
 
-			if a:verbose
-				echo 'supersleuth: no indent, defaulting to ts=' .. &ts
-			endif
+			call s:verbose(a:verbose, 'no indent, defaulting to ts=' .. &ts)
 		else
 			" what's the difference between indents? consistent?
 			let indents = sort(map(keys(space_indents), 'str2nr(v:val)'))
@@ -160,13 +150,11 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 				setlocal expandtab shiftwidth=0
 				let &l:tabstop = indent
 
-				if a:verbose
-					echo 'supersleuth: using consistent step between indents (' .. &ts .. ')'
-				endif
+				call s:verbose(a:verbose, 'using consistent step between indents (' .. &ts .. ')')
 			else
 				" no indent - always echo, regardless of a:verbose
 				echohl ErrorMsg
-				echo 'supersleuth: warning: no indent found - no tabs & inconsistent spaces'
+				echo "supersleuth: warning: no indent found - no tabs & inconsistent spaces"
 				echohl none
 			endif
 		endif
@@ -175,4 +163,10 @@ endfunction
 
 function! s:is_integral(n)
 	return a:n == float2nr(a:n)
+endfunction
+
+function! s:verbose(v, msg)
+	if a:v
+		echo "supersleuth:" a:msg
+	endif
 endfunction
