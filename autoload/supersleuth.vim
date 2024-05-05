@@ -175,7 +175,11 @@ function! s:is_integral(n)
 endfunction
 
 function! s:verbose(v, msg, skipecho = 0)
-	let log = strftime("%Y-%m-%d %H:%M:%S") . ": " . @% . ": " . a:msg
+  let fname = @%
+  if empty(fname)
+    let fname = "<buf " . bufnr() . ">"
+  endif
+	let log = strftime("%Y-%m-%d %H:%M:%S") . ": " . fname . ": " . a:msg
 	call add(g:supersleuth_log, log)
 
 	if len(g:supersleuth_log) > 256
