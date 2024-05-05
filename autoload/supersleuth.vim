@@ -11,7 +11,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			endfor
 			return
 		else
-			echoerr 'Usage: SuperSleuth [-n] [-s] # -n: dry run, -s: show'
+			echoerr 'Usage: SuperSleuth [-n] [-s] # -n: dry run, -s: show log'
 			return
 		endif
 	endif
