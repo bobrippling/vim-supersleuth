@@ -1,6 +1,14 @@
 let g:supersleuth_log = get(g:, 'supersleuth_log', [])
+let g:supersleuth_reg_au = get(g:, 'supersleuth_reg_au', 0)
 
 function! supersleuth#SuperSleuth(verbose, args) abort
+	if !g:supersleuth_reg_au
+		let g:supersleuth_reg_au = 1
+		augroup supersleuth
+			autocmd OptionSet tabstop,shiftwidth,expandtab call supersleuth#OnSet(expand("<amatch>"))
+		augroup END
+	endif
+
 	let dry = 0
 	if !empty(a:args)
 		if a:args ==# '-n'
@@ -168,6 +176,15 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			endif
 		endif
 	endif
+endfunction
+
+function! supersleuth#OnSet(amatch)
+	let msg = v:option_command . " " .
+	\ a:amatch . ", " .
+	\ "(b:supersleuth=" . get(b:, "supersleuth", 0) . ")" .
+	\ ", " . v:option_old . " --> " . v:option_new
+
+	call s:verbose(0, msg)
 endfunction
 
 function! s:is_integral(n)
