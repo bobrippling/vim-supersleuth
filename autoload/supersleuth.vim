@@ -1,6 +1,4 @@
-if !exists('g:supersleuth_log')
-	let g:supersleuth_log = []
-endif
+let g:supersleuth_log = get(g:, 'supersleuth_log', [])
 
 function! supersleuth#SuperSleuth(verbose, args) abort
 	let dry = 0
