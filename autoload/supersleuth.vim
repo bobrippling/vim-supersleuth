@@ -200,7 +200,7 @@ function! s:verbose(v, msg, skipecho = 0)
 	call add(g:supersleuth_log, log)
 
 	if len(g:supersleuth_log) > 256
-		call remove(g:supersleuth_log, 256, len(g:supersleuth_log) - 1)
+		let g:supersleuth_log = g:supersleuth_log[len(g:supersleuth_log) - 256:]
 	endif
 
 	if a:v && !a:skipecho
