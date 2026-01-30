@@ -37,6 +37,11 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 		return
 	endif
 
+	if &l:tabstop != &g:tabstop || &l:shiftwidth != &g:shiftwidth || &l:expandtab != &g:expandtab
+		call s:verbose(a:verbose, "not supersleuthing, ts/sw/et already set (after/...?)")
+		return
+	endif
+
 	let regex_tab = "^\t\\+\\S"
 
 	let space_indents = {} " Map<indent-level, count>
