@@ -18,7 +18,7 @@ function! s:Init(redetect)
 	endif
 	let b:supersleuth = 1
 
-	call supersleuth#SuperSleuth(0, '')
+	call supersleuth#SuperSleuth(0, '', 0)
 endfunction
 
 augroup supersleuth
@@ -29,4 +29,4 @@ augroup supersleuth
 	autocmd FileType * nested call s:Init(0)
 augroup END
 
-command! -bar -nargs=? SuperSleuth call supersleuth#SuperSleuth(1, <q-args>)
+command! -bar -nargs=? -bang SuperSleuth call supersleuth#SuperSleuth(1, <q-args>, <bang>0)

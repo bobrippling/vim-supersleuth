@@ -1,7 +1,7 @@
 let g:supersleuth_log = get(g:, 'supersleuth_log', [])
 let g:supersleuth_reg_au = get(g:, 'supersleuth_reg_au', 0)
 
-function! supersleuth#SuperSleuth(verbose, args) abort
+function! supersleuth#SuperSleuth(verbose, args, bang) abort
 	if !g:supersleuth_reg_au
 		let g:supersleuth_reg_au = 1
 		augroup supersleuth
@@ -19,7 +19,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 			endfor
 			return
 		else
-			echoerr 'Usage: SuperSleuth [-n] [-s] # -n: dry run, -s: show log'
+			echoerr 'Usage: SuperSleuth[!] [-n] [-s] # -n: dry run, -s: show log, !: force'
 			return
 		endif
 	endif
@@ -37,7 +37,7 @@ function! supersleuth#SuperSleuth(verbose, args) abort
 		return
 	endif
 
-	if &l:tabstop != &g:tabstop || &l:shiftwidth != &g:shiftwidth || &l:expandtab != &g:expandtab
+	if !a:bang && (&l:tabstop != &g:tabstop || &l:shiftwidth != &g:shiftwidth || &l:expandtab != &g:expandtab)
 		call s:verbose(a:verbose, "not supersleuthing, ts/sw/et already set (after/...?)")
 		return
 	endif
